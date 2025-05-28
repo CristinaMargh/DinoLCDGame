@@ -82,7 +82,7 @@ void showHS() {
 bool hasObstacleRow(int r) {
   int s = r * 16;
   for (int i = s; i < s + 16; i++)
-    if((r == 0 && world[i]==4) || (r == 1 && (world[i] == 2||world[i] == 3)))
+    if((r == 0 && world[i]==4) || (r == 1 && (world[i] == 2 || world[i] == 3)))
       return true;
   return false;
 }
@@ -160,7 +160,7 @@ State state = IDLE;
 
 void loop() {
 
-  //Start menu)
+  //Start menu
     while(state == IDLE) {
     lcd.setCursor(0,1);
     lcd.print("Start");
@@ -173,21 +173,21 @@ void loop() {
     else if(joyUp(JOY_START_PIN, startCenter)){
       while (joyUp(JOY_START_PIN, startCenter));
       lcd.clear();
-      score=0; 
-      canJump=true;
-      inJump=false;
+      score = 0; 
+      canJump = true;
+      inJump = false;
       buildWorld();
       drawWorld();
       state = PLAYING;
     }
   }
 
-  while(state == PLAYING) {
-    if(canJump && joyUp(JOY_JUMP_PIN,jumpCenter)) {
+  while (state == PLAYING) {
+    if (canJump && joyUp(JOY_JUMP_PIN,jumpCenter)) {
       jump();
-      canJump=false; }
-    if(!canJump && joyUpRel(JOY_JUMP_PIN,jumpCenter)) 
-      canJump=true;
+      canJump = false; }
+    if (!canJump && joyUpRel(JOY_JUMP_PIN,jumpCenter)) 
+      canJump = true;
 
     if (updateWorld()) {
       tone(BUZ_PIN,600,300);
@@ -197,26 +197,34 @@ void loop() {
       lcd.setCursor(0,1); 
       lcd.print("Score: "); 
       lcd.print(score);
-      if(score>readHS())
+      if (score > readHS())
          writeHS(score);
       state = GAMEOVER; 
       break;
     }
   }
 
-  //──── GAME OVER ─────────────────────────────────
+  // GAME OVER 
   while(state==GAMEOVER){
-    lcd.setCursor(0,0); // (asiguram cursorul)
+    lcd.setCursor(0,0);
     if(joyUp(JOY_JUMP_PIN,jumpCenter)){          // UP pe stanga → HS
       showHS();
-      lcd.clear(); lcd.setCursor(0,0); lcd.print("   GAME  OVER   ");
-      lcd.setCursor(0,1); lcd.print("Score: "); lcd.print(score);
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("   GAME  OVER   ");
+      lcd.setCursor(0,1);
+      lcd.print("Score: ");
+      lcd.print(score);
       while(joyUp(JOY_JUMP_PIN,jumpCenter));
     }
     else if(joyUp(JOY_START_PIN,startCenter)){   
-      while(joyUp(JOY_START_PIN,startCenter));
-      lcd.clear(); score=0; canJump=true; inJump=false;
-      buildWorld(); drawWorld();
+      while (joyUp(JOY_START_PIN,startCenter));
+      lcd.clear();
+      score = 0;
+      canJump = true;
+      inJump = false;
+      buildWorld();
+      drawWorld();
       state = PLAYING;
     }
   }
