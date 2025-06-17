@@ -6,11 +6,11 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // PINS
-const int JOY_JUMP_PIN  = A1;   // joystick stanga – UP = jump / show HS
-const int JOY_START_PIN = A0;   // joystick dreapta – left = start / restart
+const int JOY_JUMP_PIN  = A1; 
+const int JOY_START_PIN = A0;   // start/reset
 const int BUZ_PIN       = A3;   // buzzer
 
-// JOYSTICK CALIBRARE
+// JOYSTICK 
 int jumpCenter  = 512;
 int startCenter = 512;
 const int DELTA_UP = -200;
@@ -44,13 +44,12 @@ char world[32];
 bool inJump = false, canJump = true;
 int  score = 0;
 
-// FUNCTII AJUTATOARE LCD
 void buildWorld() {
   memset(world, 32, 32);
   const char t[]="Score:";
   for (byte i = 0; i < 6; i++) 
     world[7 + i] = t[i];
-  world[17] = 0;  // dino jos
+  world[17] = 0; 
 }
 
 void drawWorld() {
@@ -78,7 +77,6 @@ void showHS() {
   delay(2000);
 }
 
-//OBSTACOLE / SCROLL / COLIZIUNI 
 bool hasObstacleRow(int r) {
   int s = r * 16;
   for (int i = s; i < s + 16; i++)
@@ -86,7 +84,7 @@ bool hasObstacleRow(int r) {
       return true;
   return false;
 }
-bool advanceWorld() {                 // intoarce true la coliziune
+bool advanceWorld() {                
   delay(100);
   if (random(35) < 4) {
     if (random(10) < 4 && !hasObstacleRow(0)) 
@@ -113,7 +111,7 @@ bool advanceWorld() {                 // intoarce true la coliziune
   return false;
 }
 
-bool updateWorld(){          // true → GAME OVER
+bool updateWorld(){          
   if(advanceWorld()) 
     return true;
   ++score;
@@ -160,12 +158,11 @@ State state = IDLE;
 
 void loop() {
 
-  //Start menu
     while(state == IDLE) {
     lcd.setCursor(0,1);
     lcd.print("Start");
 
-    if (joyUp(JOY_JUMP_PIN,jumpCenter)){          // UP pe stanga → HS
+    if (joyUp(JOY_JUMP_PIN,jumpCenter)){          
       showHS();
       while (joyUp(JOY_JUMP_PIN, jumpCenter));
       lcd.clear();
@@ -207,7 +204,7 @@ void loop() {
   // GAME OVER 
   while(state==GAMEOVER){
     lcd.setCursor(0,0);
-    if(joyUp(JOY_JUMP_PIN,jumpCenter)){          // UP pe stanga → HS
+    if(joyUp(JOY_JUMP_PIN,jumpCenter)){          
       showHS();
       lcd.clear();
       lcd.setCursor(0,0);
